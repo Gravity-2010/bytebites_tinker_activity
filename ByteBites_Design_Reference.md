@@ -9,6 +9,7 @@ Do not add authentication logic, a database layer, or any features not described
 in the spec.
 
 ## Behavioral Instructions
-<!-- Write a short set of instructions guiding how your AI assistant should behave 
-when helping with this project — for example, which classes to stay within, 
-what complexity to avoid, or any preferences for how suggestions are structured. -->
+- Model the app using only the four classes in the spec: Customer, FoodItem, Menu, and Transaction.
+- Keep the logic simple and use Python lists for item collections and purchase history.
+- Focus on category filtering, item details, purchase history, and transaction total cost.
+- Write recommendations as small, clear design ideas with no extra complexity.
