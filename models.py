@@ -40,6 +40,10 @@ class Customer:
         """Returns the list of transactions in purchase history."""
         return self.purchase_history
 
+    def total_spent(self) -> float:
+        """Returns the total amount spent across all transactions."""
+        return sum(tx.total_cost() for tx in self.purchase_history)
+
 
 class Transaction:
     """Represents a single transaction with multiple food items."""
@@ -77,6 +81,14 @@ class Menu:
     def filter_by_category(self, category: str) -> list:
         """Returns items matching the specified category."""
         return [item for item in self.items if item.category == category]
+
+    def filter_by_price_range(self, min_price: float, max_price: float) -> list:
+        """Returns items whose price falls within the specified range."""
+        return [item for item in self.items if min_price <= item.price <= max_price]
+
+    def sort_by_price(self, ascending: bool = True) -> list:
+        """Returns a new list of items sorted by price."""
+        return sorted(self.items, key=lambda item: item.price, reverse=not ascending)
 
 
 # ============================================================================
@@ -118,6 +130,7 @@ def test_customer():
     customer.add_transaction(tx2)
     
     assert len(customer.get_purchase_history()) == 2
+    assert customer.total_spent() == tx1.total_cost() + tx2.total_cost()
     print("✓ Customer tests passed")
 
 
@@ -183,6 +196,18 @@ def test_menu():
     # Test filtering with no matches
     no_match = menu.filter_by_category("NonExistent")
     assert len(no_match) == 0
+
+    # Test filtering by price range
+    under_five = menu.filter_by_price_range(0.0, 5.00)
+    assert len(under_five) == 3
+    assert all(item.price <= 5.00 for item in under_five)
+
+    # Test sorting by price
+    sorted_asc = menu.sort_by_price(ascending=True)
+    assert [item.price for item in sorted_asc] == sorted([item.price for item in menu.get_all_items()])
+
+    sorted_desc = menu.sort_by_price(ascending=False)
+    assert [item.price for item in sorted_desc] == sorted([item.price for item in menu.get_all_items()], reverse=True)
     print("✓ Menu tests passed")
 
 
